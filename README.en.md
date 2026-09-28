@@ -1,4 +1,4 @@
-# StickyNotes 📝
+# oncenotes 📝
 
 [中文](README.md) | **English**
 
@@ -9,11 +9,11 @@ A lightweight, beautiful sticky notes app for macOS. Built with native Swift + S
 <table>
   <tr>
     <td align="center"><b>📝 Text Notes</b><br><sub>Markdown rendering · Glassmorphism</sub></td>
-    <td align="center"><b>✅ Todo Notes</b><br><sub>Check to strike through</sub></td>
+    <td align="center"><b>✅ Todo Notes</b><br><sub>Check to strike through · Week calendar</sub></td>
   </tr>
   <tr>
     <td><img src="docs/screenshots/note-text.png" width="330" alt="Text note: Markdown preview"></td>
-    <td><img src="docs/screenshots/note-todo.png" width="310" alt="Todo note"></td>
+    <td><img src="docs/screenshots/note-todo.png" width="310" alt="Todo note with week calendar"></td>
   </tr>
 </table>
 
@@ -28,20 +28,22 @@ drag it near the left/right screen edge to snap flush, with the edge-side corner
 
 ## Features
 
-- **Two note types**
+- **Three note types**
   - 📝 **Text notes**: Markdown support (headings, lists, todo syntax, quotes, bold/italic/inline code, dividers), one-click toggle between edit and preview
-  - ✅ **Todo notes**: add items one by one, check the box to strike through, edit or delete individual items
+  - ✅ **Todo notes**: a week-calendar filter (7 date cells, Sunday first on the left); each todo can be assigned to a day (unscheduled items collect in an "Unscheduled" section); tapping the "M月" label in the calendar row toggles to show all unscheduled items; new todos default to the selected day and sit at the top; edited items re-date to today on blur; Enter inserts a new line below; creating a fresh todo note automatically absorbs unfinished items from other notes
+  - 📅 **Calendar**: a month view with offline lunar dates and holidays — pin it to the desktop as a translucent glass calendar card; right-click a day cell to add a mark, which auto-generates a todo for that day
 - **Three window modes** (set per note)
   - 📌 Always on top — floats above every other window
   - 🪟 Normal window — behaves like a regular app
   - 🖥 Pinned to desktop — sinks to the desktop layer, sticking to the wallpaper like a widget without blocking anything
-- **History**: deleted notes are automatically archived by date; browse day by day and restore with one click
+- **Opacity slider** (all three note types): 30%–100% — dial it down and the card looks like a pane of glass
+- **History**: deleted notes are automatically archived by date; browse day by day and restore with one click; scheduled todos inside archived notes are matched back to their dates (by item text) when you create a new todo note
 - **Collapsed notes**: collapse a note into a single title bar — the title comes from the first line and is never truncated; todo notes show completion progress (e.g. `2/4`); collapsed state persists across restarts
 - **Edge snapping**: drag a collapsed bar near the left/right screen edge to snap flush — the edge-side corners turn square (as if "cut off" by the screen), with trackpad haptic feedback; release to settle smoothly
 - **Checkable preview**: in text-note preview mode, the checkboxes rendered from `- [ ]` are directly clickable, and the source text stays in sync
 - **Highlighter**: drag across text to mark it just like a real highlighter — works in both text and todo notes; backspace erases character by character, the highlight color matches each note's theme, and highlights persist, follow your edits, and stay visible in preview mode
 - **AI integration (MCP)**: built-in MCP server so AI assistants like Codex / Claude can create, edit, delete, move, collapse, and restore notes directly (see below)
-- **Five soft colors**: Morandi-style lemon yellow / peach pink / mint green / sky blue / lilac purple
+- **Three soft colors**: Morandi-style lemon yellow / peach pink / sky blue
 - **Glassmorphism design**: frosted translucent background, gradient glass border, serif headings
 - **Auto save**: writes to disk 1 second after you stop typing; position, size, color, and mode are all remembered
 - **Launch at login**: one-click toggle in the menu bar
@@ -52,10 +54,10 @@ drag it near the left/right screen edge to snap flush, with the edge-side corner
 Requires macOS 14+ and Xcode Command Line Tools (`xcode-select --install`).
 
 ```bash
-git clone git@github.com:simony3/StickyNotes.git
-cd StickyNotes
+git clone https://github.com/isfamily/oncenotes.git
+cd oncenotes
 ./build.sh
-open /Applications/StickyNotes.app
+open "/Applications/一次便签.app"
 ```
 
 `build.sh` compiles, packages the `.app`, signs it (ad-hoc), and installs it to `/Applications`.
@@ -68,12 +70,15 @@ open /Applications/StickyNotes.app
 | Move | Drag anywhere on the note |
 | Resize | Drag the note's edges |
 | Change color / window mode | Hover over the note's top bar |
+| Opacity | Slider in the top bar (30%–100%), available on all note types |
 | Edit / preview | ✏️ / 👁 button in the top bar |
-| Collapse / expand | Collapse button at the far right of the top bar |
+| Collapse / expand | Click the title bar |
 | Edge snap | Drag a collapsed bar near the left/right screen edge (snaps within 16pt, drag away to release) |
 | Check off todos | Click the checkbox in a todo note; clicking `- [ ]` boxes in text-note preview works too |
+| Schedule todos | Tap the calendar button at the end of a line to pick a day; unscheduled items live in the "Unscheduled" section; tap the "M月" label to view all unscheduled items |
+| Delete a single todo | Right-click the line → "Delete this item" |
 | Highlighter | Top-bar highlighter button or `⌘⇧H` to enter the mode: drag to paint, click to place the caret, backspace to erase, Esc to exit; the right-click menu erases the selection or clears all highlights |
-| Delete note | ✕ at the top left (archived into history, recoverable) |
+| Delete note | Right-click the note → "Delete this note" (archived into history, recoverable) |
 | View / restore history | Menu bar → "History" |
 | Summon all notes | Click the app icon |
 
@@ -114,13 +119,13 @@ Everyday changes are sent to the running app as granular commands, so the MCP se
 ```toml
 [mcp_servers.stickynotes]
 command = "python3"
-args = ["/path/to/StickyNotes/mcp/stickynotes_mcp.py"]
+args = ["/path/to/oncenotes/mcp/stickynotes_mcp.py"]
 ```
 
 **Setup (Claude Code):**
 
 ```bash
-claude mcp add stickynotes -- python3 /path/to/StickyNotes/mcp/stickynotes_mcp.py
+claude mcp add stickynotes -- python3 /path/to/oncenotes/mcp/stickynotes_mcp.py
 ```
 
 Restart the client and the AI will see the tools above.
